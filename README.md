@@ -41,7 +41,7 @@ If your component renders different content depending on context you need to spe
 
 ### Configuration
 
-You don't need to configure the cache, but if you want to you simply create a [ehcacheTapestryContent.xml](https://github.com/got5/tapestry-caching/blob/master/src/main/resources/ehcacheTapestryContent-fallback.xml) and set the cache regions to cache as you want. This is a standard [ehcache](http://ehcache.sourceforge.net/}EHCache) configuration file.
+You don't need to configure the cache, but if you want to you simply create a [ehcacheTapestryContent.xml](https://github.com/got5/tapestry-caching/blob/master/src/main/resources/ehcacheTapestryContent-fallback.xml) and set the cache regions to cache as you want. This is a standard [ehcache](http://ehcache.org/) configuration file.
 
 The components requires cache's called
 
