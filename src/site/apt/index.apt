@@ -1,0 +1,45 @@
+Introduction
+
+ This component provides caching of the generated HTML for a page snippet in EHCache. This is mainly useful if you have expensive (to render) areas of a page that you cannot fully cache (e.g. if the page is personalised).
+
+ Using ehcache as the cache backed gives you many options for configuration and management (e.g. you can use JMX to flush the caches).
+
+Usage
+
+ 'Simply' place the caching tag around your cachable content.
+
++--
+<dl id="cached" t:type="cache/Container">
+    <dt>Time in cache</dt>
+    <dd>${now}</dd>
+</dl>
++--
+
+ This will cache the content according for a 'medium' length of time.
+
+ You can specify short, medium or long cache times via the cacheRegion parameter
+
+ If your component renders different content depending on context you need to specify a cacheSuffix parameter to differentiate them.
+
++--
+ <dl id="personallyCached" t:type="cache/Container" cacheSuffix="username">
+    <dt>Hi ${username} Time in cache</dt>
+    <dd>${now}</dd>
+ </dl>
++--
+
+Configuration
+
+ You don't need to configure the cache, but if you want to you simply create a '{{{https://github.com/ioko-tapestry-commons/ioko-tapestry-commons/blob/master/tapestry-commons/tapestry-caching/src/main/resources/ehcacheTapestryContent-fallback.xml}ehcacheTapestryContent.xml}} and set the cache regions to cache as you want. This is a standard {{{http://ehcache.sourceforge.net/}EHCache}} configuration file.
+
+ The components requires cache's called
+
+ * content-short
+
+ * content-medium
+
+ * content-long
+
+Notes
+
+ You must make sure you application server is NOT generating 'cookieless sessions' if your cached area includes any hyperlinks.
