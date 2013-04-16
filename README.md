@@ -15,18 +15,18 @@ Using ehcache as the cache backed gives you many options for configuration and m
 
 Add this dependency in the pom.xml of your project:
 
-<dependency>
-	<groupId>uk.co.ioko</groupId>
-	<artifactId>tapestry-caching</artifactId>
-	<version>1.0-SNAPSHOT</version>
-</dependency>
+	<dependency>
+		<groupId>uk.co.ioko</groupId>
+		<artifactId>tapestry-caching</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</dependency>
 
 Then, simply place the caching tag around your cachable content in your TML files.
 
-<div t:id="cached" t:type="cache/Container">
-    <dt>Time in cache</dt>
-    <dd>${now}</dd>
-</div>
+	<div t:id="cached" t:type="cache/Container">
+		<dt>Time in cache</dt>
+		<dd>${now}</dd>
+	</div>
 
 This will cache the content according for a 'medium' length of time.
 
@@ -34,14 +34,14 @@ You can specify short, medium or long cache times via the cacheRegion parameter
 
 If your component renders different content depending on context you need to specify a cacheSuffix parameter to differentiate them.
 
-<div t:id="personallyCached" t:type="cache/Container" t:cacheSuffix="username">
-    <dt>Hi ${username} Time in cache</dt>
-    <dd>${now}</dd>
-</div>
+	<div t:id="personallyCached" t:type="cache/Container" t:cacheSuffix="username">
+		<dt>Hi ${username} Time in cache</dt>
+		<dd>${now}</dd>
+	</div>
 
 ### Configuration
 
-You don't need to configure the cache, but if you want to you simply create a '{{{https://github.com/ioko-tapestry-commons/ioko-tapestry-commons/blob/master/tapestry-commons/tapestry-caching/src/main/resources/ehcacheTapestryContent-fallback.xml}ehcacheTapestryContent.xml}} and set the cache regions to cache as you want. This is a standard {{{http://ehcache.sourceforge.net/}EHCache}} configuration file.
+You don't need to configure the cache, but if you want to you simply create a [ehcacheTapestryContent.xml](https://github.com/got5/tapestry-caching/blob/master/src/main/resources/ehcacheTapestryContent-fallback.xml) and set the cache regions to cache as you want. This is a standard [ehcache](http://ehcache.sourceforge.net/}EHCache) configuration file.
 
 The components requires cache's called
 
