@@ -24,7 +24,7 @@
     <groupId>uk.co.ioko</groupId>
     <artifactId>tapestry-caching</artifactId>
     <name>Tapestry Caching</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.6.1</version>
 
     <dependencies>
 
