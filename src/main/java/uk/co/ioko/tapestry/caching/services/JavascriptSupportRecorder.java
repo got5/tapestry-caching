@@ -89,18 +89,6 @@ public class JavascriptSupportRecorder extends SupportRecorder implements JavaSc
         recordMethodCall(method, priority, functionName, parameter);
         javaScriptSupport.addInitializerCall(priority, functionName, parameter);
     }
-    
-    public void addInitializerCall(InitializationPriority priority, String functionName, JSONArray parameter) {
-        Method method = getMethod("addInitializerCall", InitializationPriority.class, String.class, JSONArray.class);
-        recordMethodCall(method, priority, functionName, parameter);
-        javaScriptSupport.addInitializerCall(priority, functionName, parameter);
-    }
-    
-    public void addInitializerCall(String functionName, JSONArray parameter) {
-        Method method = getMethod("addInitializerCall", String.class, JSONArray.class);
-        recordMethodCall(method, functionName, parameter);
-        javaScriptSupport.addInitializerCall(functionName, parameter);
-    }
 
     public void addInitializerCall(String functionName, String parameter) {
         Method method = getMethod("addInitializerCall", String.class, String.class);

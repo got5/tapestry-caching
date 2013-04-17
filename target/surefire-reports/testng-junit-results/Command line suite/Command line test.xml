@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite hostname="L30764" name="uk.co.ioko.tapestry.caching.tests.TestContentCache" tests="1" failures="0" timestamp="17 Apr 2013 08:45:47 GMT" time="5.59" errors="0">
+  <testcase name="testCaching on instance testCaching(uk.co.ioko.tapestry.caching.tests.TestContentCache)" time="5.57" classname="uk.co.ioko.tapestry.caching.tests.TestContentCache"/>
+</testsuite>

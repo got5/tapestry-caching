@@ -27,12 +27,6 @@ public class ClientBehaviorSupportRecorder extends SupportRecorder implements Cl
         recordMethodCall(method, new Object[] {clientId, alwaysSubmit, showFunctionName, hideFunctionName});
         clientBehaviorSupport.addFormFragment(clientId, alwaysSubmit, showFunctionName, hideFunctionName);
     }
-    
-    public void addFormFragment(String clientId, boolean alwaysSubmit, String showFunctionName, String hideFunctionName, String visibilityBoundFunctionName) {
-        Method method = getMethod("addFormFragment", String.class, boolean.class, String.class, String.class, String.class);
-        recordMethodCall(method, new Object[] {clientId, alwaysSubmit, showFunctionName, hideFunctionName, visibilityBoundFunctionName});
-        clientBehaviorSupport.addFormFragment(clientId, alwaysSubmit, showFunctionName, hideFunctionName, visibilityBoundFunctionName);
-    }
 
     public void addFormInjector(String clientId, Link link, InsertPosition insertPosition, String showFunctionName) {
 		Method method = getMethod("addFormInjector", String.class, Link.class, InsertPosition.class, String.class);

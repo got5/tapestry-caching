@@ -19,8 +19,14 @@
 
 package uk.co.ioko.tapestry.caching.pages;
 
+import org.apache.tapestry5.EventConstants;
+import org.apache.tapestry5.annotations.BeginRender;
+import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.corelib.components.Zone;
 
 import java.util.Date;
 
@@ -29,26 +35,24 @@ import java.util.Date;
  */
 public class PageTestContentCache {
 
+	@Property
 	private Date now;
-
-	public Date getNow() {
-		return now;
-	}
 
 	@Property
 	@Persist
 	private Integer count;
-
-
-	public void onIncrement() {
-		count++;
-	}
-
+	
+	@SetupRender
 	public void setupRender() {
 		if (count == null) {
 			count = 0;
 		}
 
 		this.now = new Date();
+	}
+	
+	@OnEvent(value="increment")
+	public void onIncrement() {
+		count++;
 	}
 }
