@@ -53,5 +53,6 @@
 <div>
     <a id="increment" href="#" t:type="eventLink" event="increment">Increment</a>
 </div>
+
 </body>
 </html>

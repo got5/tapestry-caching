@@ -19,6 +19,8 @@
 
 package uk.co.ioko.tapestry.caching.tests;
 
+import junit.framework.TestCase;
+
 import org.apache.tapestry5.dom.Document;
 import org.apache.tapestry5.dom.Element;
 import org.apache.tapestry5.dom.Node;
@@ -29,11 +31,21 @@ import org.testng.annotations.Test;
 /**
  * Created by IntelliJ IDEA. User: ben Date: Jun 23, 2009 Time: 11:15:39 AM
  */
-public class TestContentCache {
+public class TestContentCache extends TestCase {
+	
+	private PageTester pageTester;
 
+	@Override
+	protected void setUp() throws Exception
+	{
+		String appPackage = "uk.co.ioko.tapestry.caching";
+		String appName = "Test";
+		pageTester = new PageTester(appPackage, appName, "src/test/webapp");
+		super.setUp();
+	}
+	
 	@Test
 	public void testCaching() throws InterruptedException {
-		PageTester pageTester = new PageTester("uk.co.ioko.tapestry.caching", "Test", "src/test/webapp");
 		Document page1 = pageTester.renderPage("PageTestContentCache");
 		Assert.assertNotNull(page1);
 
