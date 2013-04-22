@@ -87,6 +87,13 @@ public class TimerServiceImpl implements TimerService {
 	}
 	
 	/**
+	 * Returns the time interval since the timer has started.
+	 */
+	public long getCurrentTime() {
+		return System.currentTimeMillis() - startTime;
+	}
+	
+	/**
 	 * Displays all timer flags.
 	 */
 	public void info() {

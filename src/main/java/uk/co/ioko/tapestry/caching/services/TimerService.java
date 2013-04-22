@@ -40,4 +40,9 @@ public interface TimerService {
 	 * Displays all timer flags.
 	 */
 	public void info();
+	
+	/**
+	 * Returns the time interval since the timer has started.
+	 */
+	public long getCurrentTime();
 }

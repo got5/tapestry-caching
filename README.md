@@ -3,7 +3,7 @@ tapestry-caching
 
 Based on ioko tapestry-commons project, check https://github.com/toby78/ioko-tapestry-commons for further information.
 
-Works with Tapestry 5.3.
+Works with Tapestry 5.2.*
 
 ## cache/Container component
 
@@ -18,7 +18,7 @@ Add this dependency in the pom.xml of your project:
 	<dependency>
 		<groupId>uk.co.ioko</groupId>
 		<artifactId>tapestry-caching</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>2.6.1</version>
 	</dependency>
 
 Then, simply place the caching tag around your cachable content in your TML files.
