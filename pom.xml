@@ -93,5 +93,31 @@
         <testng-release-version>5.14.10</testng-release-version>
         <easymock-release-version>3.0</easymock-release-version>
     </properties>
+    
+    <profiles>
+            <profile>
+                    <id>opensource</id>
+                     <activation> 
+                        <activeByDefault>true</activeByDefault> 
+                      </activation> 
+              <properties> 
+                <kazan-public-releases-repo-url>http://nexus.devlab722.net/nexus/content/repositories/releases</kazan-public-releases-repo-url>
+                <kazan-public-snapshots-repo-url>http://nexus.devlab722.net/nexus/content/repositories/snapshots</kazan-public-snapshots-repo-url> 
+                <release-id>devlab722-repo</release-id>
+                <snapshot-id>devlab722-snapshot-repo</snapshot-id>
+              </properties> 
+            </profile>
+        </profiles>
+                
+        <distributionManagement>
+                <repository>
+                        <id>${release-id}</id>
+                        <url>${kazan-public-releases-repo-url}</url>
+                </repository>
+                <snapshotRepository>
+                        <id>${snapshot-id}</id>
+                        <url>${kazan-public-snapshots-repo-url}</url>
+                </snapshotRepository>
+        </distributionManagement>
 
 </project>
