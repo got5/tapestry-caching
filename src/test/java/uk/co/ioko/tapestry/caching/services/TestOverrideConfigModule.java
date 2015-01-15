@@ -19,15 +19,17 @@
 
 package uk.co.ioko.tapestry.caching.services;
 
-import org.apache.tapestry5.ioc.annotations.SubModule;
 import org.apache.tapestry5.ioc.MappedConfiguration;
+import org.apache.tapestry5.ioc.annotations.SubModule;
 
 /**
  * Created by IntelliJ IDEA. User: ben Date: Jun 24, 2009 Time: 12:09:21 PM
  */
 @SubModule(TestModule.class)
 public class TestOverrideConfigModule {
-	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration) {
-		configuration.add("contentCache.cacheConfigurationFile", "/ehcacheTapestryContent-test.xml");
+	public static void contributeApplicationDefaults(
+			MappedConfiguration<String, String> configuration) {
+		configuration.add("contentCache.cacheConfigurationFile",
+				"/ehcacheTapestryContent-test.xml");
 	}
 }

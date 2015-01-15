@@ -17,7 +17,7 @@
   ~     along with ioko tapestry-commons.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ehcache>
+<ehcache name="ehcacheTapestryContent-test">
 
 	<!--
 		Sets the path to the directory where cache files are created.

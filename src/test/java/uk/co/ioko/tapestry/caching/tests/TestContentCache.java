@@ -19,147 +19,153 @@
 
 package uk.co.ioko.tapestry.caching.tests;
 
-import junit.framework.TestCase;
-
-import org.apache.tapestry5.dom.Document;
-import org.apache.tapestry5.dom.Element;
-import org.apache.tapestry5.dom.Node;
-import org.apache.tapestry5.test.PageTester;
+import org.apache.tapestry5.test.SeleniumTestCase;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * Created by IntelliJ IDEA. User: ben Date: Jun 23, 2009 Time: 11:15:39 AM
  */
-public class TestContentCache extends TestCase {
-	
-	private PageTester pageTester;
+public class TestContentCache extends SeleniumTestCase {
 
-	@Override
-	protected void setUp() throws Exception
-	{
-		String appPackage = "uk.co.ioko.tapestry.caching";
-		String appName = "Test";
-		pageTester = new PageTester(appPackage, appName, "src/test/webapp");
-		super.setUp();
-	}
-	
 	@Test
 	public void testCaching() throws InterruptedException {
-		Document page1 = pageTester.renderPage("PageTestContentCache");
-		Assert.assertNotNull(page1);
+		open("PageTestContentCache");
 
-		String live = page1.getElementById("live").getChildMarkup();
-		String cached = getCachedElement(page1);
-		String cachedSuffix = getCachedSuffixElement(page1);
+		Data data = new Data();
+		data = updateData(data);
 
-		String liveDate = getDate(live);
-		String cachedDate = getDate(cached);
-		String cachedSuffixDate = getDate(cachedSuffix);
-		Integer liveIncrement = getIncrement(live);
-		Integer cachedIncrement = getIncrement(cached);
-		Integer cacheSuffixIncrement = getIncrement(cachedSuffix);
+		Assert.assertEquals(data.getLiveDate(), data.getCachedDate());
+		Assert.assertEquals(data.getLiveDate(), data.getCachedSuffixDate());
+		Assert.assertEquals(data.getLiveIncrement(), data.getCachedIncrement());
+		Assert.assertEquals(data.getLiveIncrement(),
+				data.getCacheSuffixIncrement());
 
-		Assert.assertEquals(liveDate, cachedDate);
-		Assert.assertEquals(liveDate, cachedSuffixDate);
-		Assert.assertEquals(liveIncrement, cachedIncrement);
-		Assert.assertEquals(liveIncrement, cacheSuffixIncrement);
+		click("//a[@id='increment']");
 
-		Element increment = page1.getElementById("increment");
+		/*
+		 * The page should now have Live - updated and incremented Cached - not
+		 * updated at all Cached Suffix - updated and incremented
+		 */
+		Data data2 = new Data();
+		data2 = updateData(data2);
 
-		Thread.sleep(1000);
-		Document page2 = pageTester.clickLink(increment);
+		Assert.assertTrue(!data2.getLiveDate().equals(data.getLiveDate()));
+		Assert.assertEquals(data.getLiveDate(), data2.getCachedDate());
+		Assert.assertEquals(data2.getLiveDate(), data2.getCachedSuffixDate());
 
-		/* The page should now have
-			Live - updated and incremented
-			Cached - not updated at all
-			Cached Suffix - updated and incremented
-		*/
-		live = page2.getElementById("live").getChildMarkup();
-		cached = getCachedElement(page2);
-		cachedSuffix = getCachedSuffixElement(page2);
+		Assert.assertEquals((Integer) (data2.getLiveIncrement() - 1),
+				data.getLiveIncrement());
+		Assert.assertEquals((Integer) (data2.getLiveIncrement() - 1),
+				data2.getCachedIncrement());
+		Assert.assertEquals(data2.getLiveIncrement(),
+				data2.getCacheSuffixIncrement());
 
+		open("PageTestContentCache");
 
-		String liveDate2 = getDate(live);
-		String cachedDate2 = getDate(cached);
-		String cachedSuffixDate2 = getDate(cachedSuffix);
-		Integer liveIncrement2 = getIncrement(live);
-		Integer cachedIncrement2 = getIncrement(cached);
-		Integer cacheSuffixIncrement2 = getIncrement(cachedSuffix);
+		/*
+		 * The page should now have Live - updated date but not increment Cached
+		 * - not updated at all Cached Suffix - will match page 2
+		 */
 
-		Assert.assertTrue(!liveDate2.equals(liveDate));
-		Assert.assertEquals(liveDate, cachedDate2);
-		Assert.assertEquals(liveDate2, cachedSuffixDate2);
+		Data data3 = new Data();
+		data3 = updateData(data3);
 
-		Assert.assertEquals((Integer)(liveIncrement2-1), liveIncrement);
-		Assert.assertEquals((Integer)(liveIncrement2-1), cachedIncrement2);
-		Assert.assertEquals(liveIncrement2, cacheSuffixIncrement2);
+		Assert.assertTrue(!data3.getLiveDate().equals(data.getLiveDate()));
+		Assert.assertTrue(!data3.getLiveDate().equals(data2.getLiveDate()));
+		Assert.assertEquals(data.getLiveDate(), data3.getCachedDate());
+		Assert.assertEquals(data3.getCachedSuffixDate(),
+				data2.getCachedSuffixDate());
 
-		Thread.sleep(1000);
-		Document page3 = pageTester.renderPage("PageTestContentCache");
-
-		/* The page should now have
-			Live - updated date but not increment
-			Cached - not updated at all
-			Cached Suffix - will match page 2
-		*/
-		live = page3.getElementById("live").getChildMarkup();
-		cached = getCachedElement(page3);
-		cachedSuffix = getCachedSuffixElement(page3);
-
-		String liveDate3 = getDate(live);
-		String cachedDate3 = getDate(cached);
-		String cachedSuffixDate3 = getDate(cachedSuffix);
-		Integer liveIncrement3 = getIncrement(live);
-		Integer cachedIncrement3 = getIncrement(cached);
-		Integer cacheSuffixIncrement3 = getIncrement(cachedSuffix);
-
-		Assert.assertTrue(!liveDate3.equals(liveDate));
-		Assert.assertTrue(!liveDate3.equals(liveDate2));
-		Assert.assertEquals(liveDate, cachedDate3);
-		Assert.assertEquals(cachedSuffixDate3, cachedSuffixDate2);
-
-		Assert.assertEquals((Integer)(liveIncrement3-1), liveIncrement);
-		Assert.assertEquals((Integer)(liveIncrement3-1), cachedIncrement3);
-		Assert.assertEquals(liveIncrement3, cacheSuffixIncrement3);
+		Assert.assertEquals((Integer) (data3.getLiveIncrement() - 1),
+				data.getLiveIncrement());
+		Assert.assertEquals((Integer) (data3.getLiveIncrement() - 1),
+				data3.getCachedIncrement());
+		Assert.assertEquals(data3.getLiveIncrement(),
+				data3.getCacheSuffixIncrement());
 	}
 
-	private String getCachedSuffixElement(Document document) {
-		Node node = ((Element) document.getRootElement().getChildren().get(1)).getChildren().get(6);
-		return node.toString();
+	private Data updateData(Data data) {
+		if (data == null)
+			data = new Data();
+		data.setLiveDate(getText("//dl[@id='live']/dd[1]"));
+		data.setCachedDate(getText("//dl[@id='cached']/dd[1]"));
+		data.setCachedSuffixDate(getText("//dl[@id='cachedSuffix']/dd[1]"));
+		data.setLiveIncrement(Integer
+				.valueOf(getText("//dl[@id='live']/dd[2]")));
+		data.setCachedIncrement(Integer
+				.valueOf(getText("//dl[@id='cached']/dd[2]")));
+		data.setCacheSuffixIncrement(Integer
+				.valueOf(getText("//dl[@id='cachedSuffix']/dd[2]")));
+		System.out.println(data);
+		return data;
 	}
 
-	private String getCachedElement(Document document){
-		Node node =  ((Element) document.getRootElement().getChildren().get(1)).getChildren().get(4);
-		return node.toString();
-	}
+	private class Data {
 
-	/**
-	 * We need to parse the string as the cached version is just text and not elements
-	 *
-	 * @param markup
-	 * @return
-	 */
-	private String getDate(String markup) {
+		private String liveDate;
+		private String cachedDate;
+		private String cachedSuffixDate;
+		private Integer liveIncrement;
+		private Integer cachedIncrement;
+		private Integer cacheSuffixIncrement;
 
-		int start = markup.indexOf("<dd>");
-		int end = markup.indexOf("</dd>");
+		public String getLiveDate() {
+			return liveDate;
+		}
 
-		return markup.substring(start + 4, end);
-	}
+		public void setLiveDate(String liveDate) {
+			this.liveDate = liveDate;
+		}
 
-	/**
-	 * We need to parse the string as the cached version is just text and not elements
-	 *
-	 * @param markup
-	 * @return
-	 */
-	private Integer getIncrement(String markup) {
+		public String getCachedDate() {
+			return cachedDate;
+		}
 
-		int start = markup.lastIndexOf("<dd>");
-		int end = markup.lastIndexOf("</dd>");
+		public void setCachedDate(String cachedDate) {
+			this.cachedDate = cachedDate;
+		}
 
-		return Integer.valueOf(markup.substring(start + 4, end));
+		public String getCachedSuffixDate() {
+			return cachedSuffixDate;
+		}
+
+		public void setCachedSuffixDate(String cachedSuffixDate) {
+			this.cachedSuffixDate = cachedSuffixDate;
+		}
+
+		public Integer getLiveIncrement() {
+			return liveIncrement;
+		}
+
+		public void setLiveIncrement(Integer liveIncrement) {
+			this.liveIncrement = liveIncrement;
+		}
+
+		public Integer getCachedIncrement() {
+			return cachedIncrement;
+		}
+
+		public void setCachedIncrement(Integer cachedIncrement) {
+			this.cachedIncrement = cachedIncrement;
+		}
+
+		public Integer getCacheSuffixIncrement() {
+			return cacheSuffixIncrement;
+		}
+
+		public void setCacheSuffixIncrement(Integer cacheSuffixIncrement) {
+			this.cacheSuffixIncrement = cacheSuffixIncrement;
+		}
+
+		@Override
+		public String toString() {
+			return "Data [liveDate=" + liveDate + ", cachedDate=" + cachedDate
+					+ ", cachedSuffixDate=" + cachedSuffixDate
+					+ ", liveIncrement=" + liveIncrement + ", cachedIncrement="
+					+ cachedIncrement + ", cacheSuffixIncrement="
+					+ cacheSuffixIncrement + "]";
+		}
 
 	}
 }

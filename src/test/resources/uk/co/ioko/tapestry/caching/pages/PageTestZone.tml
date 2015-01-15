@@ -11,7 +11,7 @@
 <div t:type="cache/Container">
 	<div t:type="zone" t:id="zoneTest">
 		<div id="divValue">${value}</div>
-		<a t:id="linkZone" id="linkZone" href="#" t:type="actionlink" t:zone="^">Link</a>
+		<a t:type="actionlink" t:zone="^" t:id="linkZone" id="linkZone" class="linkZone">Link</a>
 	</div>
 </div>
 </body>

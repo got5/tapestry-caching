@@ -20,9 +20,18 @@
 
 
 <suite name="All">
-    <test name="unit">
-        <packages>
-            <package name="uk.co.ioko.tapestry.caching.pages"/>
-        </packages>
-    </test>
+    <parameter name="tapestry.web-app-folder" value="src/test/webapp"/>
+	
+    
+	<test name="PageTestZone">
+		<classes>
+			<class name="uk.co.ioko.tapestry.caching.tests.TestZone" />
+		</classes>
+	</test>
+	<test name="PageTestContentCache">
+		<classes>
+			<class name="uk.co.ioko.tapestry.caching.tests.TestContentCache" />
+		</classes>
+	</test>
+	
 </suite>
