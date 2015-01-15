@@ -19,68 +19,80 @@
 
 package uk.co.ioko.tapestry.caching.services;
 
+import java.lang.management.ManagementFactory;
+import java.net.URL;
+
+import javax.management.MBeanServer;
+
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.management.ManagementService;
+
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uk.co.ioko.tapestry.caching.services.support.CacheRegion;
 import uk.co.ioko.tapestry.caching.services.support.CachedContent;
 
-import javax.management.MBeanServer;
-import java.lang.management.ManagementFactory;
-import java.net.URL;
-
 /**
- * Provides support for retrieving cached content.  Note that cached content consists of two parts: a simple string
- * representing the plain text of the content after it was rendered and a list of cached method calls made to
+ * Provides support for retrieving cached content. Note that cached content
+ * consists of two parts: a simple string representing the plain text of the
+ * content after it was rendered and a list of cached method calls made to
  * RenderSupport.
- *
+ * 
  * @author seldred
  */
 public class ContentCacheImpl implements ContentCache {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContentCacheImpl.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(ContentCacheImpl.class);
 
 	private static final String CACHE_NAME = "content";
 
 	private static final String CACHE_SEPARATOR = "-";
 
-
 	private CacheManager cacheManager;
 
-	public ContentCacheImpl(@Inject @Symbol("contentCache.cacheConfigurationFile") String configurationFileName) {
+	public ContentCacheImpl(
+			@Inject @Symbol("contentCache.cacheConfigurationFile") String configurationFileName) {
 		// create a new CacheManager from the config file
 		URL url = this.getClass().getResource(configurationFileName);
 		if (url == null) {
-			url = this.getClass().getResource("/ehcacheTapestryContent-fallback.xml");
+			url = this.getClass().getResource(
+					"/ehcacheTapestryContent-fallback.xml");
 		}
-		cacheManager = new CacheManager(url);
-		cacheManager.setName("TapestryContentCache");
+		cacheManager = CacheManager.create(url);
+		if (null == cacheManager.getName()
+				|| cacheManager.getName().length() == 0) {
+			cacheManager.setName("TapestryContentCache");
+		}
+		logger.debug("Cache Manager name : " + cacheManager.getName());
 		try {
 			registerMBeans(cacheManager);
 		} catch (net.sf.ehcache.CacheException e) {
-			logger.warn(
-					"Unable to register JMX. This is normal during unit testing, bad in production. Error is logged at debug level.");
+			logger.warn("Unable to register JMX. This is normal during unit testing, bad in production. Error is logged at debug level.");
 			logger.debug("Unable to register JMX", e);
 		}
 	}
 
 	private void registerMBeans(CacheManager cacheManager) {
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-		ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true, true);
+		ManagementService.registerMBeans(cacheManager, mBeanServer, true, true,
+				true, true, true);
 	}
 
-
 	/**
-	 * Attempts to get the named content from the specified cache, where cache region is either "short", "medium" or
-	 * "long".  Returns null if no matching component is found.
-	 *
-	 * @param contentKey  the key for storing the content
-	 * @param cacheRegion either "short", "medium" or "long"
+	 * Attempts to get the named content from the specified cache, where cache
+	 * region is either "short", "medium" or "long". Returns null if no matching
+	 * component is found.
+	 * 
+	 * @param contentKey
+	 *            the key for storing the content
+	 * @param cacheRegion
+	 *            either "short", "medium" or "long"
 	 * @return the cached content or null if not found
 	 */
 	public CachedContent getContent(String contentKey, CacheRegion cacheRegion) {
@@ -95,26 +107,32 @@ public class ContentCacheImpl implements ContentCache {
 	}
 
 	/**
-	 * Adds the named content to the specified cache, where cache region is either "short", "medium" or "long".  The
-	 * content is keyed on the given key.
-	 *
-	 * @param contentKey  the key for storing the content
-	 * @param content	 the content to add
-	 * @param cacheRegion either "short", "medium" or "long"
+	 * Adds the named content to the specified cache, where cache region is
+	 * either "short", "medium" or "long". The content is keyed on the given
+	 * key.
+	 * 
+	 * @param contentKey
+	 *            the key for storing the content
+	 * @param content
+	 *            the content to add
+	 * @param cacheRegion
+	 *            either "short", "medium" or "long"
 	 */
-	public void addContent(String contentKey, CachedContent content, CacheRegion cacheRegion) {
+	public void addContent(String contentKey, CachedContent content,
+			CacheRegion cacheRegion) {
 		Ehcache cache = getCache(cacheRegion);
 		Element element = new Element(contentKey, content);
 		cache.put(element);
 	}
 
 	private Ehcache getCache(CacheRegion cacheRegion) {
-		String cacheName = CACHE_NAME + CACHE_SEPARATOR + cacheRegion.getCacheNameSuffix();
-		
-		if (cacheManager.getEhcache(cacheName)==null){
+		String cacheName = CACHE_NAME + CACHE_SEPARATOR
+				+ cacheRegion.getCacheNameSuffix();
+
+		if (cacheManager.getEhcache(cacheName) == null) {
 			cacheManager.addCache(cacheName);
 		}
-		
+
 		return cacheManager.getEhcache(cacheName);
 	}
 }
