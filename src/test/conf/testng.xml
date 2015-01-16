@@ -21,6 +21,7 @@
 
 <suite name="All">
     <parameter name="tapestry.web-app-folder" value="src/test/webapp"/>
+	<parameter name="tapestry.browser-start-command" value="googlechrome"/>
 	
     
 	<test name="PageTestZone">
